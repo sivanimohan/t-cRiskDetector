@@ -5,10 +5,10 @@ import numpy as np
 
 app = Flask(__name__)
 
-# Load your model
-model_path = "sivanimohan/legal-risk-model"
-model = AutoModelForSequenceClassification.from_pretrained(model_path)
-tokenizer = AutoTokenizer.from_pretrained(model_path)
+# Load the model from Hugging Face
+MODEL_NAME = "sivanimohan/legal-risk-model"
+model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME)
+tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
@@ -34,4 +34,4 @@ def analyze():
     return jsonify({"error": "No text provided"}), 400
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000)
