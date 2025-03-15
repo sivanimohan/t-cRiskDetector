@@ -6,7 +6,7 @@ import numpy as np
 app = Flask(__name__)
 
 # Load your model
-model_path = "sivanimohan/legal-risk-model"
+model_path = "./Legal Risk Model"
 model = AutoModelForSequenceClassification.from_pretrained(model_path)
 tokenizer = AutoTokenizer.from_pretrained(model_path)
 
