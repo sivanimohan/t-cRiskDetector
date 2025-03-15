@@ -6,3 +6,9 @@ document.getElementById("analyze").addEventListener("click", () => {
     });
   });
 });
+chrome.runtime.onMessage.addListener((request) => {
+  if (request.action === "result") {
+    document.getElementById("result").innerText = 
+      `Risk Level: ${request.result.risk} (${request.result.confidence}%)`;
+  }
+});
