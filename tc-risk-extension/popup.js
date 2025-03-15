@@ -1,14 +1,17 @@
-document.getElementById("analyze").addEventListener("click", () => {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    chrome.scripting.executeScript({
-      target: { tabId: tabs[0].id },
-      files: ["content.js"]
-    });
-  });
-});
-chrome.runtime.onMessage.addListener((request) => {
-  if (request.action === "result") {
-    document.getElementById("result").innerText = 
-      `Risk Level: ${request.result.risk} (${request.result.confidence}%)`;
+document.getElementById('analyzeButton').addEventListener('click', async () => {
+  const text = document.getElementById('inputText').value;
+
+  if (!text) {
+    alert('Please enter some text');
+    return;
   }
+
+  const response = await fetch('http://localhost:5000/analyze', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text }),
+  });
+
+  const result = await response.json();
+  document.getElementById('result').innerText = `Risk: ${result.risk} (${result.confidence.toFixed(2)}%)`;
 });
