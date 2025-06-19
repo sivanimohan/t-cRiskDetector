@@ -3,6 +3,7 @@ Terms and Conditions Risk Detector
 📌 Overview
 
 The Terms and Conditions Risk Detector is a machine learning-based tool that analyzes legal documents, particularly terms and conditions, to assess their risk levels. This model helps users identify clauses that may have potential legal implications, ensuring better awareness before agreeing to terms.
+Google Colab Notebook : https://colab.research.google.com/drive/1GwIF-Nxpy7Jd9e6Zv-opGE6x-UBlxlXQ#scrollTo=PWj3a8GFL8zy
 
 🚀 Features
 
