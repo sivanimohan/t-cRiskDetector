@@ -1,71 +1,111 @@
-Terms and Conditions Risk Detector
+# t-c-risk-detector
 
-📌 Overview
+A machine learning-based tool for automated legal risk detection in Terms & Conditions (T&C) and legal documents. This repository provides a pretrained transformer model (Legal-BERT) fine-tuned for legal risk classification, along with all necessary configs and tokenizers for easy deployment and inference.
 
-The Terms and Conditions Risk Detector is a machine learning-based tool that analyzes legal documents, particularly terms and conditions, to assess their risk levels. This model helps users identify clauses that may have potential legal implications, ensuring better awareness before agreeing to terms.
-Google Colab Notebook : https://colab.research.google.com/drive/1GwIF-Nxpy7Jd9e6Zv-opGE6x-UBlxlXQ#scrollTo=PWj3a8GFL8zy
+---
 
-🚀 Features
+## Features
 
-AI-Powered Risk Assessment: Categorizes terms into low, medium, or high-risk levels.
+- **Legal Risk Detection**: Predicts risk categories in legal text (T&C, contracts, privacy policies, etc.)
+- **Pretrained Model**: Based on [nlpaueb/legal-bert-base-uncased](https://huggingface.co/nlpaueb/legal-bert-base-uncased) for superior performance on legal language.
+- **Easy Integration**: All model, tokenizer, and config files included for quick use in Python ML/NLP pipelines.
+- **Extensible**: Can be further fine-tuned on custom legal datasets.
+- **Multi-class Classification**: Supports multiple risk categories (see config for details).
 
-Natural Language Processing (NLP): Utilizes a fine-tuned transformer model to understand legal text.
+---
 
-Confidence Scoring: Provides probability scores for each risk category.
+## Repository Structure
 
-CSV-Based Analysis: Allows bulk processing of legal documents.
+```
+t-c-risk-detector/
+└── Legal Risk Model/
+    ├── config.json                # Model architecture & label mapping
+    ├── model.safetensors          # Pretrained & fine-tuned model weights
+    ├── special_tokens_map.json    # Special token mapping for tokenizer
+    ├── tokenizer.json             # Full tokenizer configuration
+    ├── tokenizer_config.json      # Tokenizer settings
+    └── vocab.txt                  # Vocabulary file
+```
 
-📂 Dataset
+---
 
-The model was trained using a dataset of various terms and conditions extracted from online agreements, labeled with risk levels by legal experts.
+## Usage
 
-📖 How It Works
+### 1. Load Model & Tokenizer (HuggingFace Transformers, PyTorch)
+```python
+from transformers import BertTokenizer, BertForSequenceClassification
+import torch
 
-Preprocess Text: The input document is tokenized and prepared for analysis.
+model_path = "path/to/Legal Risk Model"
+tokenizer = BertTokenizer.from_pretrained(model_path)
+model = BertForSequenceClassification.from_pretrained(model_path)
 
-Model Prediction: The trained AI model predicts the risk level.
+text = "Your terms and conditions text goes here."
+inputs = tokenizer(text, return_tensors="pt", max_length=512, truncation=True, padding="max_length")
+outputs = model(**inputs)
+pred = torch.argmax(outputs.logits, dim=1).item()
+print("Predicted risk label:", pred)
+```
 
-Output Interpretation: The model assigns a risk category and confidence scores to each clause.
+### 2. Prediction Labels
 
-🛠️ Installation & Setup
+See `config.json` for mapping. Example:
+```json
+"id2label": {
+  "0": "LABEL_0",
+  "1": "LABEL_1",
+  "2": "LABEL_2"
+}
+```
+Customize `LABEL_0`, `LABEL_1`, etc. as per your dataset/classes.
 
-1️⃣ Clone the Repository
+### 3. Fine-tuning / Extension
 
-git clone https://github.com/sivanimohan/t-cRiskDetector.git
-cd t-cRiskDetector
+You can further fine-tune the model with HuggingFace Trainer or your own pipeline by using the `model.safetensors` and tokenizer files.
 
-2️⃣ Install Dependencies
+---
 
-pip install -r requirements.txt
+## Requirements
 
-3️⃣ Run the Model
+- Python 3.8+
+- `transformers` (v4.48.3 or compatible)
+- `torch`
+- (Optional) `safetensors`
 
-python predict.py --text "By using our services, you consent to data sharing with third parties."
+Install with:
+```bash
+pip install transformers torch safetensors
+```
 
-📊 Example Output
+---
 
-Predicted Risk Level: High
-Confidence Scores: [0.02, 0.05, 0.93]
+## Pretrained Model
 
-🔧 Model Training & Fine-Tuning
+The pretrained and fine-tuned model is available on Hugging Face:
+- **[sivanimohan/legal-risk-model](https://huggingface.co/sivanimohan/legal-risk-model)**
 
-To train the model on new data:
+You can load the model directly from Hugging Face like this:
+```python
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
-python train.py --dataset legal_risk_analysis.csv
+tokenizer = AutoTokenizer.from_pretrained("sivanimohan/legal-risk-model")
+model = AutoModelForSequenceClassification.from_pretrained("sivanimohan/legal-risk-model")
+```
 
-📜 License
+---
 
-This project is open-source and available under the MIT License.
+## References
 
-👩‍💻 Author
+- [Legal-BERT Model](https://huggingface.co/nlpaueb/legal-bert-base-uncased)
+- [HuggingFace Model Card: sivanimohan/legal-risk-model](https://huggingface.co/sivanimohan/legal-risk-model)
+- [HuggingFace Transformers Documentation](https://huggingface.co/docs/transformers/index)
 
-Developed by Sivani Mohan
+---
 
-GitHub: sivanimohan
+## License
 
-LinkedIn: Sivani Mohan
+MIT License
 
-⭐ Contribute
+---
 
-Pull requests are welcome! Feel free to open an issue for suggestions or improvements.
-
+**Automate legal risk analysis in your workflow with t-c-risk-detector!**
